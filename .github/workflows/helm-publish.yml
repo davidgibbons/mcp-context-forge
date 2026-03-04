@@ -4,12 +4,12 @@
 #
 # Validates the mcp-stack Helm chart on every push / PR that touches
 # chart files.  On a published GitHub Release the chart is packaged and
-# pushed to oci://ghcr.io/ibm/mcp-context-forge/mcp-stack.
+# pushed to oci://ghcr.io/vevo/mcp-context-forge/mcp-stack.
 #
 # ➤ Lint trigger:    push / pull_request on chart changes
 # ➤ Publish trigger: release published (non-draft, non-prerelease, v* tag)
 # ➤ Manual trigger:  workflow_dispatch (always lints and publishes)
-# ➤ OCI target:      oci://ghcr.io/ibm/mcp-context-forge/mcp-stack
+# ➤ OCI target:      oci://ghcr.io/vevo/mcp-context-forge/mcp-stack
 #
 # ======================================================================
 
@@ -130,13 +130,13 @@ jobs:
       # ----------------------------------------------------------------
       # helm push <chart.tgz> oci://registry/org/repo
       # Helm appends the chart name automatically, yielding:
-      #   ghcr.io/ibm/mcp-context-forge/mcp-stack:<version>
+      #   ghcr.io/vevo/mcp-context-forge/mcp-stack:<version>
       # ----------------------------------------------------------------
       - name: 🚀  Push chart to OCI registry
         shell: bash
         run: |
           set -euo pipefail
-          REGISTRY="oci://ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
+          REGISTRY="oci://ghcr.io/vevo/mcp-context-forge"
           helm push "dist/mcp-stack-${{ steps.chart.outputs.version }}.tgz" "${REGISTRY}"
           echo "Published ${REGISTRY}/mcp-stack:${{ steps.chart.outputs.version }}"
 
@@ -144,6 +144,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          REGISTRY="oci://ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')"
+          REGISTRY="oci://ghcr.io/vevo/mcp-context-forge"
           helm show chart "${REGISTRY}/mcp-stack" \
             --version "${{ steps.chart.outputs.version }}"
